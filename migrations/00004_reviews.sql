@@ -3,8 +3,8 @@
 
 CREATE TABLE reviews (
                          review_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                         game_id   UUID NOT NULL REFERENCES games(game_id) ON DELETE CASCADE,
-                         user_id   UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                         game_id   UUID NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+                         user_id   UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                          rating    SMALLINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
                          comment   TEXT,
                          created_at TIMESTAMPTZ DEFAULT NOW(),

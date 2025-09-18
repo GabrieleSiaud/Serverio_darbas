@@ -4,7 +4,7 @@
 CREATE TABLE saved_games (
                              id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                              user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-                             game_id UUID NOT NULL REFERENCES games(game_id) ON DELETE CASCADE,
+                             game_id UUID NOT NULL REFERENCES games(id) ON DELETE CASCADE,
                              created_at TIMESTAMPTZ DEFAULT NOW(),
                              updated_at TIMESTAMPTZ DEFAULT NOW(),
                              UNIQUE(user_id, game_id)
