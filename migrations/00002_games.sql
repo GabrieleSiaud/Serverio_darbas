@@ -32,14 +32,6 @@ CREATE TRIGGER update_games_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
--- Insert sample game (optional)
-INSERT INTO games (title, description, release_date)
-VALUES (
-           'Example Game',
-           'This is a sample game description.',
-           '2025-01-01'
-       );
-
 -- +goose StatementEnd
 
 -- +goose Down

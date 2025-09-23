@@ -35,15 +35,6 @@ CREATE TRIGGER update_users_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
--- Insert default user (example)
-INSERT INTO users (name, surname, username, email, password)
-VALUES (
-           'Admin',
-           'Admin',
-           'admin',
-           'admin@example.com',
-           'admin123'
-       );
 -- +goose StatementEnd
 
 -- +goose Down

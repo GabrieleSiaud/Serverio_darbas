@@ -6,6 +6,6 @@ sql:
       - "./migrations"
     gen:
       go:
-        package: "tutorial"
-        out: "tutorial"
+        package: "repository"                       # paketo pavadinimas, kurį importuos main.go
+        out: "internal/generated/repository"       # kur sugeneruoti Go failus
         sql_package: "pgx/v5"
