@@ -8,6 +8,7 @@ package repository
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -22,8 +23,8 @@ VALUES ($1, $2, $3, $4)
 `
 
 type CreateReviewParams struct {
-	GameID  pgtype.UUID
-	UserID  pgtype.UUID
+	GameID  uuid.UUID
+	UserID  uuid.UUID
 	Rating  int16
 	Comment pgtype.Text
 }
@@ -53,7 +54,7 @@ DELETE FROM reviews
 WHERE review_id = $1
 `
 
-func (q *Queries) DeleteReview(ctx context.Context, reviewID pgtype.UUID) error {
+func (q *Queries) DeleteReview(ctx context.Context, reviewID uuid.UUID) error {
 	_, err := q.db.Exec(ctx, deleteReview, reviewID)
 	return err
 }
@@ -63,7 +64,7 @@ SELECT review_id, game_id, user_id, rating, comment, created_at, updated_at FROM
 WHERE review_id = $1
 `
 
-func (q *Queries) GetReview(ctx context.Context, reviewID pgtype.UUID) (Review, error) {
+func (q *Queries) GetReview(ctx context.Context, reviewID uuid.UUID) (Review, error) {
 	row := q.db.QueryRow(ctx, getReview, reviewID)
 	var i Review
 	err := row.Scan(
@@ -87,14 +88,14 @@ ORDER BY r.created_at DESC
 `
 
 type ListReviewsByGameRow struct {
-	ReviewID  pgtype.UUID
+	ReviewID  uuid.UUID
 	Rating    int16
 	Comment   pgtype.Text
 	CreatedAt pgtype.Timestamptz
 	Username  string
 }
 
-func (q *Queries) ListReviewsByGame(ctx context.Context, gameID pgtype.UUID) ([]ListReviewsByGameRow, error) {
+func (q *Queries) ListReviewsByGame(ctx context.Context, gameID uuid.UUID) ([]ListReviewsByGameRow, error) {
 	rows, err := q.db.Query(ctx, listReviewsByGame, gameID)
 	if err != nil {
 		return nil, err
@@ -129,14 +130,14 @@ ORDER BY r.created_at DESC
 `
 
 type ListReviewsByUserRow struct {
-	ReviewID  pgtype.UUID
+	ReviewID  uuid.UUID
 	Rating    int16
 	Comment   pgtype.Text
 	CreatedAt pgtype.Timestamptz
 	Title     string
 }
 
-func (q *Queries) ListReviewsByUser(ctx context.Context, userID pgtype.UUID) ([]ListReviewsByUserRow, error) {
+func (q *Queries) ListReviewsByUser(ctx context.Context, userID uuid.UUID) ([]ListReviewsByUserRow, error) {
 	rows, err := q.db.Query(ctx, listReviewsByUser, userID)
 	if err != nil {
 		return nil, err

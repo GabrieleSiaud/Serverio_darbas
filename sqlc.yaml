@@ -6,6 +6,9 @@ sql:
       - "./migrations"
     gen:
       go:
-        package: "repository"                       # paketo pavadinimas, kurį importuos main.go
-        out: "internal/generated/repository"       # kur sugeneruoti Go failus
+        package: "repository"
+        out: "internal/generated/repository"
         sql_package: "pgx/v5"
+        overrides:
+          - db_type: "uuid"
+            go_type: "github.com/google/uuid.UUID"

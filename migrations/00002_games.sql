@@ -31,7 +31,18 @@ CREATE TRIGGER update_games_updated_at
     BEFORE UPDATE ON games
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
+-- +goose StatementEnd
 
+-- +goose StatementBegin
+INSERT INTO games (id, title, description, release_date, created_at, updated_at)
+VALUES (
+           uuid_generate_v4(),
+           'Mortal Kombat',
+           'A classic fighting game franchise featuring brutal combat and iconic characters.',
+           '1992-10-08',
+           NOW(),
+           NOW()
+       );
 -- +goose StatementEnd
 
 -- +goose Down

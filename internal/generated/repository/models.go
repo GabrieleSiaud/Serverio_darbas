@@ -7,11 +7,12 @@ package repository
 import (
 	"net/netip"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Game struct {
-	ID          pgtype.UUID
+	ID          uuid.UUID
 	Title       string
 	Description pgtype.Text
 	ReleaseDate pgtype.Date
@@ -20,8 +21,8 @@ type Game struct {
 }
 
 type OauthProvider struct {
-	ID               pgtype.UUID
-	UserID           pgtype.UUID
+	ID               uuid.UUID
+	UserID           uuid.UUID
 	Provider         string
 	ProviderUserID   string
 	ProviderUsername pgtype.Text
@@ -34,9 +35,9 @@ type OauthProvider struct {
 }
 
 type Review struct {
-	ReviewID  pgtype.UUID
-	GameID    pgtype.UUID
-	UserID    pgtype.UUID
+	ReviewID  uuid.UUID
+	GameID    uuid.UUID
+	UserID    uuid.UUID
 	Rating    int16
 	Comment   pgtype.Text
 	CreatedAt pgtype.Timestamptz
@@ -44,15 +45,15 @@ type Review struct {
 }
 
 type SavedGame struct {
-	ID        pgtype.UUID
-	UserID    pgtype.UUID
-	GameID    pgtype.UUID
+	ID        uuid.UUID
+	UserID    uuid.UUID
+	GameID    uuid.UUID
 	CreatedAt pgtype.Timestamptz
 	UpdatedAt pgtype.Timestamptz
 }
 
 type User struct {
-	ID        pgtype.UUID
+	ID        uuid.UUID
 	Name      string
 	Surname   string
 	Username  string
@@ -63,8 +64,8 @@ type User struct {
 }
 
 type UserSession struct {
-	SessionID    pgtype.UUID
-	UserID       pgtype.UUID
+	SessionID    uuid.UUID
+	UserID       uuid.UUID
 	SessionToken string
 	JwtTokenID   pgtype.Text
 	DeviceInfo   pgtype.Text

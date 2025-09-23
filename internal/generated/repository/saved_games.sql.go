@@ -8,6 +8,7 @@ package repository
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -17,8 +18,8 @@ WHERE user_id = $1 AND game_id = $2
 `
 
 type DeleteSavedGameParams struct {
-	UserID pgtype.UUID
-	GameID pgtype.UUID
+	UserID uuid.UUID
+	GameID uuid.UUID
 }
 
 func (q *Queries) DeleteSavedGame(ctx context.Context, arg DeleteSavedGameParams) error {
@@ -31,7 +32,7 @@ SELECT id, user_id, game_id, created_at, updated_at FROM saved_games
 WHERE id = $1
 `
 
-func (q *Queries) GetSavedGame(ctx context.Context, id pgtype.UUID) (SavedGame, error) {
+func (q *Queries) GetSavedGame(ctx context.Context, id uuid.UUID) (SavedGame, error) {
 	row := q.db.QueryRow(ctx, getSavedGame, id)
 	var i SavedGame
 	err := row.Scan(
@@ -53,9 +54,9 @@ ORDER BY sg.created_at DESC
 `
 
 type ListSavedGamesByUserRow struct {
-	ID          pgtype.UUID
-	UserID      pgtype.UUID
-	GameID      pgtype.UUID
+	ID          uuid.UUID
+	UserID      uuid.UUID
+	GameID      uuid.UUID
 	CreatedAt   pgtype.Timestamptz
 	UpdatedAt   pgtype.Timestamptz
 	Title       string
@@ -63,7 +64,7 @@ type ListSavedGamesByUserRow struct {
 	ReleaseDate pgtype.Date
 }
 
-func (q *Queries) ListSavedGamesByUser(ctx context.Context, userID pgtype.UUID) ([]ListSavedGamesByUserRow, error) {
+func (q *Queries) ListSavedGamesByUser(ctx context.Context, userID uuid.UUID) ([]ListSavedGamesByUserRow, error) {
 	rows, err := q.db.Query(ctx, listSavedGamesByUser, userID)
 	if err != nil {
 		return nil, err
@@ -100,8 +101,8 @@ RETURNING id, user_id, game_id, created_at, updated_at
 `
 
 type SaveGameParams struct {
-	UserID pgtype.UUID
-	GameID pgtype.UUID
+	UserID uuid.UUID
+	GameID uuid.UUID
 }
 
 func (q *Queries) SaveGame(ctx context.Context, arg SaveGameParams) (SavedGame, error) {

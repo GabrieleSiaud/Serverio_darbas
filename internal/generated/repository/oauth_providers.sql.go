@@ -8,6 +8,7 @@ package repository
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -17,7 +18,7 @@ WHERE user_id = $1 AND provider = $2
 `
 
 type DeleteOAuthProviderParams struct {
-	UserID   pgtype.UUID
+	UserID   uuid.UUID
 	Provider string
 }
 
@@ -61,7 +62,7 @@ WHERE user_id = $1 AND provider = $2
 `
 
 type GetOAuthProviderByUserParams struct {
-	UserID   pgtype.UUID
+	UserID   uuid.UUID
 	Provider string
 }
 
@@ -96,7 +97,7 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 `
 
 type LinkOAuthProviderParams struct {
-	UserID           pgtype.UUID
+	UserID           uuid.UUID
 	Provider         string
 	ProviderUserID   string
 	ProviderUsername pgtype.Text

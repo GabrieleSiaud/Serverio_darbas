@@ -9,6 +9,7 @@ import (
 	"context"
 	"net/netip"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -19,7 +20,7 @@ VALUES ($1, $2, $3, $4, $5, $6)
 `
 
 type CreateSessionParams struct {
-	UserID       pgtype.UUID
+	UserID       uuid.UUID
 	SessionToken string
 	JwtTokenID   pgtype.Text
 	DeviceInfo   pgtype.Text
@@ -66,7 +67,7 @@ DELETE FROM user_sessions
 WHERE session_id = $1
 `
 
-func (q *Queries) DeleteSession(ctx context.Context, sessionID pgtype.UUID) error {
+func (q *Queries) DeleteSession(ctx context.Context, sessionID uuid.UUID) error {
 	_, err := q.db.Exec(ctx, deleteSession, sessionID)
 	return err
 }
@@ -99,7 +100,7 @@ WHERE user_id = $1
 ORDER BY created_at DESC
 `
 
-func (q *Queries) ListSessionsByUser(ctx context.Context, userID pgtype.UUID) ([]UserSession, error) {
+func (q *Queries) ListSessionsByUser(ctx context.Context, userID uuid.UUID) ([]UserSession, error) {
 	rows, err := q.db.Query(ctx, listSessionsByUser, userID)
 	if err != nil {
 		return nil, err
@@ -136,7 +137,7 @@ WHERE session_id = $1
     RETURNING session_id, user_id, session_token, jwt_token_id, device_info, ip_address, expires_at, created_at, last_used_at
 `
 
-func (q *Queries) UpdateSessionLastUsed(ctx context.Context, sessionID pgtype.UUID) (UserSession, error) {
+func (q *Queries) UpdateSessionLastUsed(ctx context.Context, sessionID uuid.UUID) (UserSession, error) {
 	row := q.db.QueryRow(ctx, updateSessionLastUsed, sessionID)
 	var i UserSession
 	err := row.Scan(

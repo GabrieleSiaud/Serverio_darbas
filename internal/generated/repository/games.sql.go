@@ -8,6 +8,7 @@ package repository
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -42,7 +43,7 @@ DELETE FROM games
 WHERE id = $1
 `
 
-func (q *Queries) DeleteGame(ctx context.Context, id pgtype.UUID) error {
+func (q *Queries) DeleteGame(ctx context.Context, id uuid.UUID) error {
 	_, err := q.db.Exec(ctx, deleteGame, id)
 	return err
 }
@@ -52,7 +53,7 @@ SELECT id, title, description, release_date, created_at, updated_at FROM games
 WHERE id = $1
 `
 
-func (q *Queries) GetGameByID(ctx context.Context, id pgtype.UUID) (Game, error) {
+func (q *Queries) GetGameByID(ctx context.Context, id uuid.UUID) (Game, error) {
 	row := q.db.QueryRow(ctx, getGameByID, id)
 	var i Game
 	err := row.Scan(
@@ -109,7 +110,7 @@ WHERE id = $1
 `
 
 type UpdateGameParams struct {
-	ID          pgtype.UUID
+	ID          uuid.UUID
 	Title       string
 	Description pgtype.Text
 	ReleaseDate pgtype.Date
