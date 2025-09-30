@@ -8,9 +8,8 @@ import (
 	"os"
 	"serverio_darbas/internal/generated/repository"
 	"serverio_darbas/internal/handlers"
+	"serverio_darbas/internal/router"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -33,20 +32,11 @@ func main() {
 	}
 	fmt.Println("✅ Database connected!")
 
-	// Init SQLC repository
 	queries := repository.New(pool)
-
-	// Init UserHandler
 	userHandler := handlers.NewUserHandler(queries)
 	gameHandler := handlers.NewGameHandler(queries)
 
-	// Router
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-
-	r.Get("/user", userHandler.GetUsers)
-	r.Post("/user", userHandler.CreateUser)
-	r.Get("/games", gameHandler.ListGames)
+	r := router.NewRouter(userHandler, gameHandler)
 
 	// Start server
 	port := "3000"
