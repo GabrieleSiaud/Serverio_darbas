@@ -43,7 +43,7 @@ func (h *UserSessionHandler) CreateSession(w http.ResponseWriter, r *http.Reques
 		JwtTokenID:   pgtype.Text{String: req.JWTTokenID, Valid: true},
 		DeviceInfo:   pgtype.Text{String: req.DeviceInfo, Valid: true},
 		IpAddress:    req.IPAddress,
-		ExpiresAt:    pgtype.Timestamptz{Time: req.ExpiresAt, Valid: true},
+		ExpiresAt:    time.Now().Add(24 * time.Hour),
 	})
 
 	if err != nil {

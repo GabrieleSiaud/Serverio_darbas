@@ -8,6 +8,7 @@ package repository
 import (
 	"context"
 	"net/netip"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -25,7 +26,7 @@ type CreateSessionParams struct {
 	JwtTokenID   pgtype.Text
 	DeviceInfo   pgtype.Text
 	IpAddress    *netip.Addr
-	ExpiresAt    pgtype.Timestamptz
+	ExpiresAt    time.Time
 }
 
 func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (UserSession, error) {

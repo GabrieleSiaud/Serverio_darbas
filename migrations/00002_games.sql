@@ -43,21 +43,65 @@ VALUES (
            NOW(),
            NOW()
        );
+INSERT INTO games (id, title, description, release_date, created_at, updated_at)
+VALUES (
+           uuid_generate_v4(),
+           'The Witcher 3: Wild Hunt',
+           'An open-world RPG where players follow Geralt of Rivia in a story-rich adventure full of choices and consequences.',
+           '2015-05-19',
+           NOW(),
+           NOW()
+       );
+
+INSERT INTO games (id, title, description, release_date, created_at, updated_at)
+VALUES (
+           uuid_generate_v4(),
+           'Half-Life 2',
+           'A groundbreaking first-person shooter with physics-based gameplay and an immersive sci-fi story.',
+           '2004-11-16',
+           NOW(),
+           NOW()
+       );
+
+INSERT INTO games (id, title, description, release_date, created_at, updated_at)
+VALUES (
+           uuid_generate_v4(),
+           'Minecraft',
+           'A sandbox game where players build, explore, and survive in blocky procedurally generated worlds.',
+           '2011-11-18',
+           NOW(),
+           NOW()
+       );
+
+INSERT INTO games (id, title, description, release_date, created_at, updated_at)
+VALUES (
+           uuid_generate_v4(),
+           'Cyberpunk 2077',
+           'A futuristic open-world RPG set in Night City, offering deep storytelling and character customization.',
+           '2020-12-10',
+           NOW(),
+           NOW()
+       );
+
+INSERT INTO games (id, title, description, release_date, created_at, updated_at)
+VALUES (
+           uuid_generate_v4(),
+           'League of Legends',
+           'A popular MOBA where players compete in strategic 5v5 battles with diverse champions.',
+           '2009-10-27',
+           NOW(),
+           NOW()
+       );
+
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-
--- Drop trigger
 DROP TRIGGER IF EXISTS update_games_updated_at ON games;
-
--- Drop function
-DROP FUNCTION IF EXISTS update_updated_at_column();
-
--- Drop index
 DROP INDEX IF EXISTS idx_games_title;
-
--- Drop games table
-DROP TABLE IF EXISTS games CASCADE;
-
+DROP TABLE IF EXISTS games;
 -- +goose StatementEnd
+
+
+
+

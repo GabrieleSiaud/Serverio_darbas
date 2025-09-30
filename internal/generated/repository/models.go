@@ -6,6 +6,7 @@ package repository
 
 import (
 	"net/netip"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -70,7 +71,7 @@ type UserSession struct {
 	JwtTokenID   pgtype.Text
 	DeviceInfo   pgtype.Text
 	IpAddress    *netip.Addr
-	ExpiresAt    pgtype.Timestamptz
+	ExpiresAt    time.Time
 	CreatedAt    pgtype.Timestamptz
 	LastUsedAt   pgtype.Timestamptz
 }
