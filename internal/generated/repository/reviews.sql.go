@@ -23,10 +23,10 @@ VALUES ($1, $2, $3, $4)
 `
 
 type CreateReviewParams struct {
-	GameID  uuid.UUID
-	UserID  uuid.UUID
-	Rating  int16
-	Comment pgtype.Text
+	GameID  uuid.UUID   `json:"game_id"`
+	UserID  uuid.UUID   `json:"user_id"`
+	Rating  int16       `json:"rating"`
+	Comment pgtype.Text `json:"comment"`
 }
 
 func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (Review, error) {
@@ -88,11 +88,11 @@ ORDER BY r.created_at DESC
 `
 
 type ListReviewsByGameRow struct {
-	ReviewID  uuid.UUID
-	Rating    int16
-	Comment   pgtype.Text
-	CreatedAt pgtype.Timestamptz
-	Username  string
+	ReviewID  uuid.UUID          `json:"review_id"`
+	Rating    int16              `json:"rating"`
+	Comment   pgtype.Text        `json:"comment"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	Username  string             `json:"username"`
 }
 
 func (q *Queries) ListReviewsByGame(ctx context.Context, gameID uuid.UUID) ([]ListReviewsByGameRow, error) {
@@ -130,11 +130,11 @@ ORDER BY r.created_at DESC
 `
 
 type ListReviewsByUserRow struct {
-	ReviewID  uuid.UUID
-	Rating    int16
-	Comment   pgtype.Text
-	CreatedAt pgtype.Timestamptz
-	Title     string
+	ReviewID  uuid.UUID          `json:"review_id"`
+	Rating    int16              `json:"rating"`
+	Comment   pgtype.Text        `json:"comment"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	Title     string             `json:"title"`
 }
 
 func (q *Queries) ListReviewsByUser(ctx context.Context, userID uuid.UUID) ([]ListReviewsByUserRow, error) {

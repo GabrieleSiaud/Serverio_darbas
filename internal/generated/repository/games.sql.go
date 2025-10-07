@@ -19,9 +19,9 @@ VALUES ($1, $2, $3)
 `
 
 type CreateGameParams struct {
-	Title       string
-	Description pgtype.Text
-	ReleaseDate pgtype.Date
+	Title       string      `json:"title"`
+	Description pgtype.Text `json:"description"`
+	ReleaseDate pgtype.Date `json:"release_date"`
 }
 
 func (q *Queries) CreateGame(ctx context.Context, arg CreateGameParams) (Game, error) {
@@ -110,10 +110,10 @@ WHERE id = $1
 `
 
 type UpdateGameParams struct {
-	ID          uuid.UUID
-	Title       string
-	Description pgtype.Text
-	ReleaseDate pgtype.Date
+	ID          uuid.UUID   `json:"id"`
+	Title       string      `json:"title"`
+	Description pgtype.Text `json:"description"`
+	ReleaseDate pgtype.Date `json:"release_date"`
 }
 
 func (q *Queries) UpdateGame(ctx context.Context, arg UpdateGameParams) (Game, error) {

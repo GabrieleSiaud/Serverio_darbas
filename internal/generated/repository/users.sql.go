@@ -18,11 +18,11 @@ VALUES ($1, $2, $3, $4, $5)
 `
 
 type CreateUserParams struct {
-	Name     string
-	Surname  string
-	Username string
-	Email    string
-	Password string
+	Name     string `json:"name"`
+	Surname  string `json:"surname"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -146,12 +146,12 @@ WHERE id = $1
 `
 
 type UpdateUserParams struct {
-	ID       uuid.UUID
-	Name     string
-	Surname  string
-	Username string
-	Email    string
-	Password string
+	ID       uuid.UUID `json:"id"`
+	Name     string    `json:"name"`
+	Surname  string    `json:"surname"`
+	Username string    `json:"username"`
+	Email    string    `json:"email"`
+	Password string    `json:"password"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {

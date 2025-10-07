@@ -18,8 +18,8 @@ WHERE user_id = $1 AND provider = $2
 `
 
 type DeleteOAuthProviderParams struct {
-	UserID   uuid.UUID
-	Provider string
+	UserID   uuid.UUID `json:"user_id"`
+	Provider string    `json:"provider"`
 }
 
 func (q *Queries) DeleteOAuthProvider(ctx context.Context, arg DeleteOAuthProviderParams) error {
@@ -33,8 +33,8 @@ WHERE provider = $1 AND provider_user_id = $2
 `
 
 type GetOAuthProviderByExternalIDParams struct {
-	Provider       string
-	ProviderUserID string
+	Provider       string `json:"provider"`
+	ProviderUserID string `json:"provider_user_id"`
 }
 
 func (q *Queries) GetOAuthProviderByExternalID(ctx context.Context, arg GetOAuthProviderByExternalIDParams) (OauthProvider, error) {
@@ -62,8 +62,8 @@ WHERE user_id = $1 AND provider = $2
 `
 
 type GetOAuthProviderByUserParams struct {
-	UserID   uuid.UUID
-	Provider string
+	UserID   uuid.UUID `json:"user_id"`
+	Provider string    `json:"provider"`
 }
 
 func (q *Queries) GetOAuthProviderByUser(ctx context.Context, arg GetOAuthProviderByUserParams) (OauthProvider, error) {
@@ -97,14 +97,14 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 `
 
 type LinkOAuthProviderParams struct {
-	UserID           uuid.UUID
-	Provider         string
-	ProviderUserID   string
-	ProviderUsername pgtype.Text
-	ProviderEmail    pgtype.Text
-	AccessToken      pgtype.Text
-	RefreshToken     pgtype.Text
-	TokenExpiresAt   pgtype.Timestamptz
+	UserID           uuid.UUID          `json:"user_id"`
+	Provider         string             `json:"provider"`
+	ProviderUserID   string             `json:"provider_user_id"`
+	ProviderUsername pgtype.Text        `json:"provider_username"`
+	ProviderEmail    pgtype.Text        `json:"provider_email"`
+	AccessToken      pgtype.Text        `json:"access_token"`
+	RefreshToken     pgtype.Text        `json:"refresh_token"`
+	TokenExpiresAt   pgtype.Timestamptz `json:"token_expires_at"`
 }
 
 func (q *Queries) LinkOAuthProvider(ctx context.Context, arg LinkOAuthProviderParams) (OauthProvider, error) {

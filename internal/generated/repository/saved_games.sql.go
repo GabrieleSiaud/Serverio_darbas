@@ -18,8 +18,8 @@ WHERE user_id = $1 AND game_id = $2
 `
 
 type DeleteSavedGameParams struct {
-	UserID uuid.UUID
-	GameID uuid.UUID
+	UserID uuid.UUID `json:"user_id"`
+	GameID uuid.UUID `json:"game_id"`
 }
 
 func (q *Queries) DeleteSavedGame(ctx context.Context, arg DeleteSavedGameParams) error {
@@ -54,14 +54,14 @@ ORDER BY sg.created_at DESC
 `
 
 type ListSavedGamesByUserRow struct {
-	ID          uuid.UUID
-	UserID      uuid.UUID
-	GameID      uuid.UUID
-	CreatedAt   pgtype.Timestamptz
-	UpdatedAt   pgtype.Timestamptz
-	Title       string
-	Description pgtype.Text
-	ReleaseDate pgtype.Date
+	ID          uuid.UUID          `json:"id"`
+	UserID      uuid.UUID          `json:"user_id"`
+	GameID      uuid.UUID          `json:"game_id"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
+	Title       string             `json:"title"`
+	Description pgtype.Text        `json:"description"`
+	ReleaseDate pgtype.Date        `json:"release_date"`
 }
 
 func (q *Queries) ListSavedGamesByUser(ctx context.Context, userID uuid.UUID) ([]ListSavedGamesByUserRow, error) {
@@ -101,8 +101,8 @@ RETURNING id, user_id, game_id, created_at, updated_at
 `
 
 type SaveGameParams struct {
-	UserID uuid.UUID
-	GameID uuid.UUID
+	UserID uuid.UUID `json:"user_id"`
+	GameID uuid.UUID `json:"game_id"`
 }
 
 func (q *Queries) SaveGame(ctx context.Context, arg SaveGameParams) (SavedGame, error) {

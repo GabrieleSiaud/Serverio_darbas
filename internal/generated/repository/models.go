@@ -13,65 +13,65 @@ import (
 )
 
 type Game struct {
-	ID          uuid.UUID
-	Title       string
-	Description pgtype.Text
-	ReleaseDate pgtype.Date
-	CreatedAt   pgtype.Timestamptz
-	UpdatedAt   pgtype.Timestamptz
+	ID          uuid.UUID          `json:"id"`
+	Title       string             `json:"title"`
+	Description pgtype.Text        `json:"description"`
+	ReleaseDate pgtype.Date        `json:"release_date"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
 }
 
 type OauthProvider struct {
-	ID               uuid.UUID
-	UserID           uuid.UUID
-	Provider         string
-	ProviderUserID   string
-	ProviderUsername pgtype.Text
-	ProviderEmail    pgtype.Text
-	AccessToken      pgtype.Text
-	RefreshToken     pgtype.Text
-	TokenExpiresAt   pgtype.Timestamptz
-	CreatedAt        pgtype.Timestamptz
-	UpdatedAt        pgtype.Timestamptz
+	ID               uuid.UUID          `json:"id"`
+	UserID           uuid.UUID          `json:"user_id"`
+	Provider         string             `json:"provider"`
+	ProviderUserID   string             `json:"provider_user_id"`
+	ProviderUsername pgtype.Text        `json:"provider_username"`
+	ProviderEmail    pgtype.Text        `json:"provider_email"`
+	AccessToken      pgtype.Text        `json:"access_token"`
+	RefreshToken     pgtype.Text        `json:"refresh_token"`
+	TokenExpiresAt   pgtype.Timestamptz `json:"token_expires_at"`
+	CreatedAt        pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt        pgtype.Timestamptz `json:"updated_at"`
 }
 
 type Review struct {
-	ReviewID  uuid.UUID
-	GameID    uuid.UUID
-	UserID    uuid.UUID
-	Rating    int16
-	Comment   pgtype.Text
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	ReviewID  uuid.UUID          `json:"review_id"`
+	GameID    uuid.UUID          `json:"game_id"`
+	UserID    uuid.UUID          `json:"user_id"`
+	Rating    int16              `json:"rating"`
+	Comment   pgtype.Text        `json:"comment"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
 type SavedGame struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	GameID    uuid.UUID
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	ID        uuid.UUID          `json:"id"`
+	UserID    uuid.UUID          `json:"user_id"`
+	GameID    uuid.UUID          `json:"game_id"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
 type User struct {
-	ID        uuid.UUID
-	Name      string
-	Surname   string
-	Username  string
-	Email     string
-	Password  string
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	ID        uuid.UUID          `json:"id"`
+	Name      string             `json:"name"`
+	Surname   string             `json:"surname"`
+	Username  string             `json:"username"`
+	Email     string             `json:"email"`
+	Password  string             `json:"password"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
 type UserSession struct {
-	SessionID    uuid.UUID
-	UserID       uuid.UUID
-	SessionToken string
-	JwtTokenID   pgtype.Text
-	DeviceInfo   pgtype.Text
-	IpAddress    *netip.Addr
-	ExpiresAt    time.Time
-	CreatedAt    pgtype.Timestamptz
-	LastUsedAt   pgtype.Timestamptz
+	SessionID    uuid.UUID          `json:"session_id"`
+	UserID       uuid.UUID          `json:"user_id"`
+	SessionToken string             `json:"session_token"`
+	JwtTokenID   pgtype.Text        `json:"jwt_token_id"`
+	DeviceInfo   pgtype.Text        `json:"device_info"`
+	IpAddress    *netip.Addr        `json:"ip_address"`
+	ExpiresAt    time.Time          `json:"expires_at"`
+	CreatedAt    pgtype.Timestamptz `json:"created_at"`
+	LastUsedAt   pgtype.Timestamptz `json:"last_used_at"`
 }

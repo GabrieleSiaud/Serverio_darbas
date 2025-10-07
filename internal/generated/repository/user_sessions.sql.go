@@ -21,12 +21,12 @@ VALUES ($1, $2, $3, $4, $5, $6)
 `
 
 type CreateSessionParams struct {
-	UserID       uuid.UUID
-	SessionToken string
-	JwtTokenID   pgtype.Text
-	DeviceInfo   pgtype.Text
-	IpAddress    *netip.Addr
-	ExpiresAt    time.Time
+	UserID       uuid.UUID   `json:"user_id"`
+	SessionToken string      `json:"session_token"`
+	JwtTokenID   pgtype.Text `json:"jwt_token_id"`
+	DeviceInfo   pgtype.Text `json:"device_info"`
+	IpAddress    *netip.Addr `json:"ip_address"`
+	ExpiresAt    time.Time   `json:"expires_at"`
 }
 
 func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (UserSession, error) {
