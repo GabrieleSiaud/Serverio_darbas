@@ -19,3 +19,10 @@ WHERE provider = $1 AND provider_user_id = $2;
 -- name: DeleteOAuthProvider :exec
 DELETE FROM oauth_providers
 WHERE user_id = $1 AND provider = $2;
+
+-- name: GetUserOAuthProviders :many
+SELECT id, user_id, provider, provider_user_id, provider_username, provider_email,
+       access_token, refresh_token, token_expires_at, created_at, updated_at
+FROM oauth_providers
+WHERE user_id = $1
+ORDER BY created_at DESC;

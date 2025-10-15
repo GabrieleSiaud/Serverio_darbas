@@ -85,6 +85,46 @@ func (q *Queries) GetOAuthProviderByUser(ctx context.Context, arg GetOAuthProvid
 	return i, err
 }
 
+const getUserOAuthProviders = `-- name: GetUserOAuthProviders :many
+SELECT id, user_id, provider, provider_user_id, provider_username, provider_email,
+       access_token, refresh_token, token_expires_at, created_at, updated_at
+FROM oauth_providers
+WHERE user_id = $1
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetUserOAuthProviders(ctx context.Context, userID uuid.UUID) ([]OauthProvider, error) {
+	rows, err := q.db.Query(ctx, getUserOAuthProviders, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []OauthProvider
+	for rows.Next() {
+		var i OauthProvider
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Provider,
+			&i.ProviderUserID,
+			&i.ProviderUsername,
+			&i.ProviderEmail,
+			&i.AccessToken,
+			&i.RefreshToken,
+			&i.TokenExpiresAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const linkOAuthProvider = `-- name: LinkOAuthProvider :one
 INSERT INTO oauth_providers (user_id, provider, provider_user_id, provider_username, provider_email, access_token, refresh_token, token_expires_at)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
