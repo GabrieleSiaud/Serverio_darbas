@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net"
+	"net/netip"
 	"time"
 
 	"github.com/google/uuid"
@@ -120,6 +121,7 @@ func (a *AuthService) HandleOAuthCallback(ctx context.Context, gothUser goth.Use
 		user = &existingUser
 
 		// Update tokens
+
 		var accessToken, refreshToken *string
 		if gothUser.AccessToken != "" {
 			accessToken = &gothUser.AccessToken
@@ -128,7 +130,7 @@ func (a *AuthService) HandleOAuthCallback(ctx context.Context, gothUser goth.Use
 			refreshToken = &gothUser.RefreshToken
 		}
 
-		err = a.queries.LinkOAuthProvider(ctx, repository.LinkOAuthProviderParams{
+		_, err = a.queries.LinkOAuthProvider(ctx, repository.LinkOAuthProviderParams{
 			UserID:           user.ID,
 			Provider:         gothUser.Provider,
 			ProviderUserID:   gothUser.UserID,
@@ -204,24 +206,34 @@ func (a *AuthService) createUserSession(ctx context.Context, user *repository.Us
 		return nil, err
 	}
 
-	var ip net.IP
+	// konvertuojam IP į netip.Addr pointerį
+	var ipAddr *netip.Addr
 	if ipAddress != "" {
-		ip = net.ParseIP(ipAddress)
+		a, err := netip.ParseAddr(ipAddress)
+		if err == nil {
+			ipAddr = &a
+		}
 	}
 
-	var deviceInfoPtr *string
-	if deviceInfo != "" {
-		deviceInfoPtr = &deviceInfo
+	// DeviceInfo į pgtype.Text
+	deviceInfoText := pgtype.Text{
+		String: deviceInfo,
+		Valid:  deviceInfo != "",
 	}
 
+	// CreateSession
 	_, err = a.queries.CreateSession(ctx, repository.CreateSessionParams{
 		UserID:       user.ID,
 		SessionToken: sessionToken,
 		JwtTokenID:   pgtype.Text{String: jti, Valid: true},
-		DeviceInfo:   deviceInfoPtr,
-		IpAddress:    ip,
+		DeviceInfo:   deviceInfoText,
+		IpAddress:    ipAddr,
 		ExpiresAt:    time.Now().Add(24 * time.Hour),
 	})
+	if err != nil {
+		return nil, err
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -235,23 +247,25 @@ func (a *AuthService) createUserSession(ctx context.Context, user *repository.Us
 
 // Validate session token
 func (a *AuthService) ValidateSession(ctx context.Context, sessionToken string) (*repository.User, error) {
+	// gauname session
 	sessionData, err := a.queries.GetSessionByToken(ctx, sessionToken)
 	if err != nil {
 		return nil, fmt.Errorf("invalid session")
 	}
 
-	_ = a.queries.UpdateSessionLastUsed(ctx, sessionData.SessionID) // log only
+	// atnaujinam last_used timestamp
+	_, _ = a.queries.UpdateSessionLastUsed(ctx, sessionData.SessionID)
 
-	user := &repository.User{
-		ID:       sessionData.UserID,
-		Email:    sessionData.Email,
-		Name:     sessionData.Name,
-		Surname:  sessionData.Surname,
-		Username: sessionData.Username,
-		Password: "", // negrąžiname slaptažodžio
+	// gauname User info pagal sessionData.UserID
+	user, err := a.queries.GetUserByID(ctx, sessionData.UserID)
+	if err != nil {
+		return nil, fmt.Errorf("user not found")
 	}
 
-	return user, nil
+	// slaptažodžio negrąžinam
+	user.Password = ""
+
+	return &user, nil
 }
 
 // Validate JWT
@@ -272,7 +286,7 @@ func (a *AuthService) ValidateJWT(ctx context.Context, tokenString string) (*rep
 
 // Logout
 func (a *AuthService) Logout(ctx context.Context, sessionToken string) error {
-	return a.queries.DeleteSession(ctx, sessionToken)
+	return a.queries.DeleteSessionByToken(ctx, sessionToken)
 }
 
 // Helper to generate random token

@@ -29,3 +29,12 @@ WHERE id = $1
 -- name: DeleteUser :exec
 DELETE FROM users
 WHERE id = $1;
+
+-- name: UpdateUserLastLogin :exec
+UPDATE users
+SET last_login = NOW()
+WHERE id = $1;
+
+-- name: DeleteSessionByToken :exec
+DELETE FROM user_sessions
+WHERE session_token = $1;

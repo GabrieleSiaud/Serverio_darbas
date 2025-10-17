@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"strings"
 
-	"go.uber.org/zap"
 	"serverio_darbas/internal/auth"
 	"serverio_darbas/internal/generated/repository"
+
+	"go.uber.org/zap"
 )
 
 type AuthMiddleware struct {
@@ -40,16 +41,8 @@ func (m *AuthMiddleware) RequireAuth(next http.Handler) http.Handler {
 
 func (m *AuthMiddleware) RequireRole(role string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-		return m.RequireAuth(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			user := r.Context().Value("user").(*repository.User)
-
-			if !user.Role.Valid || user.Role.String != role {
-				http.Error(w, "Insufficient permissions", http.StatusForbidden)
-				return
-			}
-
-			next.ServeHTTP(w, r)
-		}))
+		// Jei roles nereikia, tiesiog pritaikom RequireAuth
+		return m.RequireAuth(next)
 	}
 }
 

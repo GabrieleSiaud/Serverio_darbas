@@ -9,9 +9,10 @@ import (
 	"strings"
 	"time"
 
+	"serverio_darbas/internal/generated/repository"
+
 	"github.com/google/uuid"
 	"go.uber.org/zap"
-	"serverio_darbas/internal/generated/repository"
 )
 
 // Updated D3Item struct to match actual API response
@@ -238,11 +239,11 @@ func (d *Diablo3Service) getUserAccessToken(ctx context.Context, userID string) 
 	for _, provider := range providers {
 		d.log.Infow("Checking provider",
 			"provider", provider.Provider,
-			"has_token", provider.AccessToken != nil)
+			"has_token", provider.AccessToken.Valid)
 
-		if provider.Provider == "battlenet" && provider.AccessToken != nil {
+		if provider.Provider == "battlenet" && provider.AccessToken.Valid {
 			d.log.Infow("Found Battle.net access token", "user_id", userID)
-			return *provider.AccessToken, nil
+			return provider.AccessToken.String, nil
 		}
 	}
 
