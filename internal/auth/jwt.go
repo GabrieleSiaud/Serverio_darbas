@@ -25,8 +25,7 @@ type Claims struct {
 func NewJWTService(secret string, issuer string) *JWTService {
 	return &JWTService{
 		secret:     []byte(secret),
-		issuer:     issuer,
-		expiration: 24 * time.Hour, // 24 hours
+		expiration: 24 * time.Hour,
 	}
 }
 

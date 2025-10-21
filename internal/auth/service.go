@@ -5,7 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
-	"net"
+	//"net"
 	"net/netip"
 	"time"
 
@@ -122,13 +122,13 @@ func (a *AuthService) HandleOAuthCallback(ctx context.Context, gothUser goth.Use
 
 		// Update tokens
 
-		var accessToken, refreshToken *string
+		/*var accessToken, refreshToken *string
 		if gothUser.AccessToken != "" {
 			accessToken = &gothUser.AccessToken
 		}
 		if gothUser.RefreshToken != "" {
 			refreshToken = &gothUser.RefreshToken
-		}
+		}*/
 
 		_, err = a.queries.LinkOAuthProvider(ctx, repository.LinkOAuthProviderParams{
 			UserID:           user.ID,
