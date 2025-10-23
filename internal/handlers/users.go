@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"serverio_darbas/internal/auth"
 
 	"serverio_darbas/internal/generated/repository"
 )
@@ -35,6 +36,15 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 👇 Hashinam slaptažodį prieš įrašymą į DB
+	hashedPassword, err := auth.HashPassword(req.Password)
+	if err != nil {
+		http.Error(w, "failed to hash password", http.StatusInternalServerError)
+		return
+	}
+	req.Password = hashedPassword
+
+	// Sukuriam vartotoją su hashuotu passwordu
 	user, err := h.db.CreateUser(ctx, req)
 	if err != nil {
 		http.Error(w, "failed to create user", http.StatusInternalServerError)

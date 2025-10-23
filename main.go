@@ -25,8 +25,6 @@ func main() {
 		log.Println("Warning: .env file not found")
 	}
 
-	fmt.Println("Client ID:", os.Getenv("BATTLE_CLIENT_ID"))
-	fmt.Println("Client Secret:", os.Getenv("BATTLE_CLIENT_SECRET"))
 	// DB URL
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
@@ -52,6 +50,24 @@ func main() {
 	// JWT service
 	jwtService := auth.NewJWTService("slaptas_raktas", string(24*time.Hour)) // Pakeisk į savo slaptą raktą
 	authService := auth.NewAuthService(queries, jwtService)
+
+	ctx := context.Background()
+	admin, err := queries.GetUserByEmail(ctx, "admin@example.com")
+	if err == nil {
+		if len(admin.Password) < 60 { // bcrypt hash visada ilgas
+			hashed, err := auth.HashPassword(admin.Password)
+			if err != nil {
+				log.Println("❌ Nepavyko suhashinti admin slaptažodžio:", err)
+			} else {
+				_, err := pool.Exec(ctx, `UPDATE users SET password=$1 WHERE email=$2`, hashed, admin.Email)
+				if err != nil {
+					log.Println("❌ Nepavyko atnaujinti admin slaptažodžio:", err)
+				} else {
+					log.Println("✅ Admin slaptažodis automatiškai suhashintas!")
+				}
+			}
+		}
+	}
 
 	// Handlers
 	userHandler := handlers.NewUserHandler(queries)
