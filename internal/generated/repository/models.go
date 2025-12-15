@@ -12,6 +12,14 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type ExternalApiCache struct {
+	CacheKey     string             `json:"cache_key"`
+	ResponseJson []byte             `json:"response_json"`
+	ExpiresAt    time.Time          `json:"expires_at"`
+	CreatedAt    pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt    pgtype.Timestamptz `json:"updated_at"`
+}
+
 type Game struct {
 	ID          uuid.UUID          `json:"id"`
 	Title       string             `json:"title"`

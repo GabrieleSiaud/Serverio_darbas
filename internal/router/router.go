@@ -17,6 +17,7 @@ func NewRouter(
 	reviewHandler *handlers.ReviewHandler,
 	authHandler *handlers.AuthHandler,
 	authMiddleware *authmw.AuthMiddleware,
+	externalHandler *handlers.ExternalHandler,
 ) http.Handler {
 	r := chi.NewRouter()
 
@@ -55,6 +56,9 @@ func NewRouter(
 			}
 			reviewHandler.DeleteReview(w, r, id)
 		})
+	})
+	r.Route("/external", func(r chi.Router) {
+		r.Get("/deals", externalHandler.Deals)
 	})
 
 	r.Route("/auth/battlenet", func(r chi.Router) {

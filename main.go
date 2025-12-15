@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"serverio_darbas/internal/services"
 	"time"
 
 	"serverio_darbas/internal/auth"
@@ -80,10 +81,12 @@ func main() {
 	gameHandler := handlers.NewGameHandler(queries)
 	authHandler := handlers.NewAuthHandler(authService)
 	reviewHandler := handlers.NewReviewHandler(queries)
+	dealsService := services.NewDealsService(queries)
+	externalHandler := handlers.NewExternalHandler(dealsService)
 	auth.InitBattleNetOAuth()
 
 	// Router
-	r := router.NewRouter(userHandler, gameHandler, reviewHandler, authHandler, authMw)
+	r := router.NewRouter(userHandler, gameHandler, reviewHandler, authHandler, authMw, externalHandler)
 
 	// Start server
 	port := "3000"
