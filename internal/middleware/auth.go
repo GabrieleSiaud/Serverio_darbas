@@ -39,13 +39,14 @@ func (m *AuthMiddleware) RequireAuth(next http.Handler) http.Handler {
 	})
 }
 
-func (m *AuthMiddleware) RequireRole(role string) func(http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		// Jei roles nereikia, tiesiog pritaikom RequireAuth
-		return m.RequireAuth(next)
+/*
+	func (m *AuthMiddleware) RequireRole(role string) func(http.Handler) http.Handler {
+		return func(next http.Handler) http.Handler {
+			// Jei roles nereikia, tiesiog pritaikom RequireAuth
+			return m.RequireAuth(next)
+		}
 	}
-}
-
+*/
 func (m *AuthMiddleware) authenticateRequest(r *http.Request) (*repository.User, error) {
 	// Try JWT token first (for API/mobile)
 	authHeader := r.Header.Get("Authorization")

@@ -11,6 +11,7 @@ import (
 	"serverio_darbas/internal/auth"
 	"serverio_darbas/internal/generated/repository"
 	"serverio_darbas/internal/handlers"
+	middleware "serverio_darbas/internal/middleware"
 	"serverio_darbas/internal/router"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -42,14 +43,19 @@ func main() {
 	queries := repository.New(pool)
 
 	// Logger
-	_, err = zap.NewDevelopment()
+	// Logger
+	logger, err := zap.NewDevelopment()
 	if err != nil {
 		log.Fatal("Failed to initialize logger:", err)
 	}
+	defer logger.Sync()
+
+	sugar := logger.Sugar()
 
 	// JWT service
 	jwtService := auth.NewJWTService("slaptas_raktas", string(24*time.Hour)) // Pakeisk į savo slaptą raktą
 	authService := auth.NewAuthService(queries, jwtService)
+	authMw := middleware.NewAuthMiddleware(authService, sugar)
 
 	ctx := context.Background()
 	admin, err := queries.GetUserByEmail(ctx, "admin@example.com")
@@ -73,10 +79,11 @@ func main() {
 	userHandler := handlers.NewUserHandler(queries)
 	gameHandler := handlers.NewGameHandler(queries)
 	authHandler := handlers.NewAuthHandler(authService)
+	reviewHandler := handlers.NewReviewHandler(queries)
 	auth.InitBattleNetOAuth()
 
 	// Router
-	r := router.NewRouter(userHandler, gameHandler, authHandler)
+	r := router.NewRouter(userHandler, gameHandler, reviewHandler, authHandler, authMw)
 
 	// Start server
 	port := "3000"
